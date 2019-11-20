@@ -1,0 +1,254 @@
+<html>
+
+<head>
+  <title>FilterPhotos</title>
+</head>
+
+<body>
+  <script src="http://www.dukelearntoprogram.com/course1/common/js/image/SimpleImage.js">
+  </script>
+  <script>
+  var original_img = null;
+var modified_img = null;
+var choosenFilter = null;
+
+function upload() {
+  var canvas = document.getElementById("canvas1");
+  var imagefile = document.getElementById("img1");
+  original_img = new SimpleImage(imagefile);
+  original_img.drawTo(canvas);
+}
+
+function doClear() {
+  var e1 = document.getElementById("canvas1");
+  e1.style.backgroundColor = "white";
+  var context1 = e1.getContext("2d");
+  context1.clearRect(0, 0, e1.width, e1.height);
+
+  var e2 = document.getElementById("canvas2");
+  e2.style.backgroundColor = "white";
+  var context2 = e2.getContext("2d");
+  context2.clearRect(0, 0, e2.width, e2.height);
+}
+
+function doReset() {
+  var e2 = document.getElementById("canvas2");
+  e2.style.backgroundColor = "white";
+  var context2 = e2.getContext("2d");
+  context2.clearRect(0, 0, e2.width, e2.height);
+  if (original_img != null) {
+    var imagefile = document.getElementById("img1");
+    original_img = new SimpleImage(imagefile);
+  }
+}
+
+function getFilter(id) {
+  var txt = "";
+  choosenFilter = id;
+  //var canvas=document.getElementById("canvas3");
+  //var context=canvas.getContext("2d");
+  if (id == "red") txt = "Red filter";
+  else if (id == "blue") txt = "Blue filter";
+  else if (id == "green") txt = "Green filter";
+  else if (id == "rainbow") txt = "Rainbow filter";
+  else if (id == "gray") txt = "Gray filter";
+  txt = "you pressed " + txt;
+
+  document.getElementById("output").innerHTML = txt;
+}
+function redFilter(img) {
+  var imgg = img;
+  for (var p of imgg.values()) {
+    p.setRed(255);
+  }
+  return imgg;
+}
+function greenFilter(img) {
+  var imgg = img;
+  for (var p of imgg.values()) {
+    p.setGreen(255);
+  }
+  return imgg;
+}
+function blueFilter(img) {
+  var imgg = img;
+  for (var p of imgg.values()) {
+    p.setBlue(255);
+  }
+  return imgg;
+}
+function rainbowFilter(img) {
+  var imgg = img;
+  var w=imgg.getWidth();
+  var h=imgg.getHeight();
+  var counter=w+h;
+  for(var p of imgg.values()){
+    if( (p.getY())<(h/7) ){
+      p.setRed(255);
+    }
+    else if( (p.getY())<(2*h/7) ){
+      p.setRed(255);
+      p.setGreen(180);
+    }
+    else if( (p.getY())<(3*h/7) ){
+      p.setRed(255);
+      p.setGreen(255);
+    }
+    else if( (p.getY())<(4*h/7) ){
+      p.setGreen(255);
+    }
+    else if( (p.getY())<(5*h/7) ){
+      p.setBlue(255);
+    }
+    else if( (p.getY())<(6*h/7) ){
+      p.setBlue(255);
+      p.setRed(120);
+    }
+    else{
+      p.setBlue(255);
+      p.setRed(255);
+    }
+  }
+  return img;
+}
+function grayFilter(img) {
+  var imgg = img;
+  for (var p of imgg.values()) {
+    var avg = (p.getRed() + p.getGreen() + p.getBlue()) / 3;
+    p.setRed(avg);
+  }
+  return imgg;
+}
+
+function applyFilter() {
+  if (original_img != null) {
+    modified_img = new SimpleImage(
+      original_img.getWidth(),
+      original_img.getHeight()
+    );
+    modified_img = original_img;
+
+    if (choosenFilter == "red") {
+      modified_img = redFilter(modified_img);
+    } else if (choosenFilter == "green") {
+      modified_img = greenFilter(modified_img);
+    } else if (choosenFilter == "blue") {
+      modified_img = blueFilter(modified_img);
+    } else if (choosenFilter == "rainbow") {
+      modified_img = rainbowFilter(modified_img);
+    } else if (choosenFilter == "gray") {
+      modified_img = grayFilter(modified_img);
+    }
+  }
+  var canvas = document.getElementById("canvas2");
+  modified_img.drawTo(canvas);
+  confirm("filter applied is " + choosenFilter);
+}
+
+  </script>
+
+  <style>
+    #canvas1{
+  color:rgb(200,0,215);
+  font-size: 15pt;
+  font-family: arial;
+  
+  Border: 2px solid blue;
+  padding: 2pt; 
+  margin:5pt;
+  width: 270pt;
+}
+#canvas2{
+  color:rgb(200,0,215);
+  font-size: 15pt;
+  font-family: arial;
+  
+  Border: 2px solid blue;
+  padding: 2pt; 
+  margin:5pt;
+  width: 270pt;
+}
+#canvas3{
+  color:rgb(200,0,215);
+  font-size: 18pt;
+  font-family: arial;
+  
+  Border: 1px solid blue;
+  padding: 0pt; 
+  margin:0pt;
+  width: 300pt;
+  height:80pt;
+  position: absolute;
+  #top:0;
+  #bottom: 0;
+  #left: 0;
+  #right:0;
+}
+#output{
+  color:rgb(200,0,215);
+  font-size: 12pt;
+  font-family: arial;
+  Border: 1px solid blue;
+  padding: 2pt; 
+  margin:2pt;
+  width: 180pt;
+  height:12pt;
+  position: absolute;
+}
+body{
+  background-color:#5478;
+}
+
+
+
+  </style>	
+  <h1 id="h1"> AndrewGram</h1>
+  <p id="p1">this web page is for trying and applying filters on your photos.
+  </p>
+  <p id="p2">you just need to upload your photo and choose the filter that you want to apply on the photo</p>
+  <table>
+    <tc>
+      <td>
+        <p>original image</p>
+      </td>
+      <td>
+        <p><canvas id="canvas1" class="orange-back" />
+          </canvas>
+        </p>
+      </td>
+    </tc>
+    <tc>
+      <td>
+        <p>modified image</p>
+      </td>
+      <td>
+        <p><canvas id="canvas2" class="orange-back" />
+          </canvas>
+        </p>
+      </td>
+    </tc>
+  </table>
+  <p id="p3">
+    upload the image:
+    <input type="file" multiple="false" id="img1" accept="image/*" onchange="upload()" />
+  </p>
+
+    <p id="p4">
+    choose the filter:
+    <input type="button" value="Red filter" id="red" onclick="getFilter(id)" />
+    <input type="button" value="Blue filter" id="blue" onclick="getFilter(id)" />
+    <input type="button" value="Green filter" id="green" onclick="getFilter(id)" />
+    <input type="button" value="Rainbow filter" id="rainbow" onclick="getFilter(id)" />
+    <input type="button" value="Gray filter" id="gray" onclick="getFilter(id)" />
+    <divv id="output">
+    </divv>
+  </p>
+  <p id="p5">
+    Choose the action:
+    <input type="button" value="Apply filter" id="b1" onclick="applyFilter()" />
+    <input type="button" value="clear" id="b2" onclick="doClear()" />
+    <input type="button" value="reset" id="b3" onclick="doReset()" />
+  </p>
+</body>
+
+</html>
